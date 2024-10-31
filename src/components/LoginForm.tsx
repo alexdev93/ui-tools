@@ -1,3 +1,4 @@
+// LoginForm.tsx
 import {
   TextInput,
   PasswordInput,
@@ -8,10 +9,11 @@ import {
 } from "@mantine/core";
 import React from "react";
 import styled from "@emotion/styled";
-import useForm from "../hooks/useForm"; // Ensure correct path
-import { LoginCredentials } from "./types"; // Adjust import path if needed
-import { loginValidation } from "../validators/auth"; // Adjust import path if needed
-import { login } from "../api/auth";
+import { useDispatch } from "react-redux";
+import useForm from "../hooks/useForm";
+import { LoginCredentials } from "./types";
+import { loginValidation } from "../validators/auth";
+import { loginRequest } from "../saga/auth/actions";
 
 const CenteredBox = styled.div`
   text-align: center;
@@ -28,11 +30,17 @@ const initialValues: LoginCredentials = {
 };
 
 const LoginForm: React.FC = () => {
+  const dispatch = useDispatch();
+
+  const handleFormSubmit = (formValues: LoginCredentials) => {
+    dispatch(loginRequest(formValues));
+  };
+
   const { values, errors, handleChange, handleSubmit } =
     useForm<LoginCredentials>({
       initialValues,
       validationSchema: loginValidation,
-      onSubmit: login,
+      onSubmit: handleFormSubmit,
     });
 
   return (

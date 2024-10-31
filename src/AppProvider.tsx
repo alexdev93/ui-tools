@@ -1,5 +1,7 @@
 import { MantineProvider } from "@mantine/core";
 import { ReactNode } from "react";
+import { Provider } from "react-redux";
+import store from "./store";
 
 interface AppProviderProps {
   children: ReactNode;
@@ -7,15 +9,8 @@ interface AppProviderProps {
 
 const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   return (
-    <MantineProvider
-    // theme={{
-    //   colorScheme: "light",
-    //   primaryColor: "blue",
-    // }}
-    // withGlobalStyles
-    // withNormalizeCSS
-    >
-      {children}
+    <MantineProvider>
+      <Provider store={store}>{children}</Provider>
     </MantineProvider>
   );
 };

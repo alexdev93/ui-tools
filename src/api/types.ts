@@ -5,11 +5,11 @@ export type ApiResponse = Promise<Response>;
 
 // Error Response Type
 export interface Response {
-  data: unknown;
-  error: string;
-  message: string;
-  path: string;
-  statusCode: number;
+  data?: unknown;
+  error?: string;
+  message?: string;
+  path?: string;
+  statusCode?: number;
 }
 
 export const localStorageKeys = {
@@ -32,44 +32,25 @@ export interface IAPICallConfig {
   // cancelToken?: CancelToken;
 }
 
-// User Data Type Example
 export interface User {
-  id: number;
-  username: string;
-  email: string;
+  id?: string;
+  username?: string;
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string[];
 }
 
-// export interface IUserModelLean {
-//   _id: string;
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   profileImage?: string;
-//   username?: string;
-//   status?: UserStatusEnums;
-// }
-
-export interface IRoleModel extends ITimeStamp {
+export interface IRoleModel {
+  id: string;
   name: string;
-  // description: string;
-  // privileges: IPrivilegeModel;
-  createdBy: string;
 }
 
 export interface IUserModel {
-  // emailVerified: boolean;
-  // isSystemAdmin: boolean;
-  // isDeveloper?: boolean;
-  // role: IRoleModel;
   id?: string;
   accessToken?: string;
   refreshToken?: string;
-  // suspensionReport?:
-  //   | string
-  //   | {
-  //       reason: string;
-  //       _id: string;
-  //     };
 }
 
 export interface ITimeStamp {

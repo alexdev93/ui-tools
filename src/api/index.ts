@@ -12,7 +12,6 @@ import { baseErrors } from "./ErrorCodes";
 import { decodeToken, isJwtTokenExpired } from "../utils";
 import { publicRoutes, routeConstants } from "../utils/routes";
 import apiRoutes from "./apiRoutes";
-
 const makeCall = async (config: IAPICallConfig): ApiResponse => {
   let accessToken;
 
@@ -26,7 +25,6 @@ const makeCall = async (config: IAPICallConfig): ApiResponse => {
 
     if (config.isSecureRoute && user) {
       accessToken = user?.accessToken || "";
-      // Refresh token if token is expired
       const refreshedAccessToken = await refreshAuth(user);
       if (typeof refreshedAccessToken === "string")
         accessToken = refreshedAccessToken;
@@ -43,11 +41,8 @@ const makeCall = async (config: IAPICallConfig): ApiResponse => {
       responseType: "json",
       onUploadProgress: config.onUploadProgress,
     });
-    if (response.statusText === "OK") {
-      return response.data;
-    } else {
-      throw new APIError(response.data?.code, response.data?.message);
-    }
+
+    return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error.response) {
@@ -64,13 +59,14 @@ export const refreshAuth = async (user: IUserModel) => {
     const decodedAccessToken = user?.accessToken
       ? decodeToken(user?.accessToken)
       : undefined;
+
     if (!decodedAccessToken || isJwtTokenExpired(user?.refreshToken ?? "")) {
       localStorage.removeItem(localStorageKeys.user);
-      const isPublicRoute = publicRoutes.find((item: unknown) =>
+      const isPublicRoute = publicRoutes.some((item: unknown) =>
         window.location.hash.includes(item as string)
       );
       if (!isPublicRoute) window.location.replace(`#/${routeConstants.login}`);
-      return;
+      return null;
     } else if (isJwtTokenExpired(user?.accessToken ?? "")) {
       const refreshedAccessToken = await refreshAccessToken(
         user?.refreshToken ?? ""
@@ -82,14 +78,11 @@ export const refreshAuth = async (user: IUserModel) => {
       };
 
       localStorage.setItem(localStorageKeys.user, JSON.stringify(updateData));
-
       return updateData.accessToken;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    throw {
-      messasge: "Couldn't refresh token",
-    };
+    console.error("Token refresh failed:", error);
+    throw new APIError(baseErrors.AUTHORIZATION_FAILED);
   }
 };
 
