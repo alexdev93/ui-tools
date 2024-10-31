@@ -21,15 +21,11 @@ const initialValues: LoginCredentials = {
 const LoginForm: React.FC = () => {
   const { loginUser } = useActions();
 
-  const handleFormSubmit = (formValues: LoginCredentials) => {
-    loginUser(formValues);
-  };
-
   const { values, errors, handleChange, handleSubmit } =
     useForm<LoginCredentials>({
       initialValues,
       validationSchema: loginValidation,
-      onSubmit: handleFormSubmit,
+      onSubmit: loginUser,
     });
 
   return (
