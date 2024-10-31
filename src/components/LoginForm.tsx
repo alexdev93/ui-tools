@@ -3,26 +3,15 @@ import {
   TextInput,
   PasswordInput,
   Button,
-  Container,
   Title,
   Text,
+  Box,
 } from "@mantine/core";
 import React from "react";
-import styled from "@emotion/styled";
-import { useDispatch } from "react-redux";
 import useForm from "../hooks/useForm";
 import { LoginCredentials } from "./types";
 import { loginValidation } from "../validators/auth";
-import { loginRequest } from "../saga/auth/actions";
-
-const CenteredBox = styled.div`
-  text-align: center;
-`;
-
-const StyledFormContainer = styled(Container)`
-  max-width: 400px;
-  margin: 50px auto;
-`;
+import useActions from "../hooks/useActions";
 
 const initialValues: LoginCredentials = {
   email: "",
@@ -30,10 +19,10 @@ const initialValues: LoginCredentials = {
 };
 
 const LoginForm: React.FC = () => {
-  const dispatch = useDispatch();
+  const { loginUser } = useActions();
 
   const handleFormSubmit = (formValues: LoginCredentials) => {
-    dispatch(loginRequest(formValues));
+    loginUser(formValues);
   };
 
   const { values, errors, handleChange, handleSubmit } =
@@ -44,13 +33,13 @@ const LoginForm: React.FC = () => {
     });
 
   return (
-    <StyledFormContainer>
-      <CenteredBox>
+    <Box>
+      <Box>
         <Title order={2}>Login to Your Account</Title>
         <Text size="sm" color="dimmed" style={{ marginTop: "8px" }}>
           Enter your credentials below to access your account
         </Text>
-      </CenteredBox>
+      </Box>
 
       <form onSubmit={handleSubmit}>
         <TextInput
@@ -79,7 +68,7 @@ const LoginForm: React.FC = () => {
           Login
         </Button>
       </form>
-    </StyledFormContainer>
+    </Box>
   );
 };
 
