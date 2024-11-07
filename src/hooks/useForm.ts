@@ -1,49 +1,71 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+// import { useState } from "react";
 
-interface UseFormOptions<T> {
-  initialValues: T;
-  validationSchema?: any;
-  onSubmit: (values: T) => void;
-}
+// interface UseFormProps<T> {
+//   initialValues: T;
+//   validationSchema?: any; // e.g., Yup schema
+//   onSubmit: (values: T) => void | Promise<void>;
+// }
 
-function useForm<T>({
-  initialValues,
-  validationSchema,
-  onSubmit,
-}: UseFormOptions<T>) {
-  const [values, setValues] = useState<T>(initialValues);
-  const [errors, setErrors] = useState<Partial<T>>({});
+// interface UseFormReturn<T> {
+//   values: T;
+//   errors: Partial<Record<keyof T, string>>;
+//   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+//   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+//   resetForm: () => void;
+// }
 
-  const validate = (values: T) => {
-    if (!validationSchema) return {};
-    try {
-      validationSchema.validateSync(values, { abortEarly: false });
-      return {};
-    } catch (validationError: any) {
-      const errors: Partial<T> = {};
-      validationError.inner.forEach((err: any) => {
-        errors[err.path as keyof T] = err.message;
-      });
-      return errors;
-    }
-  };
+// function useForm<T>({
+//   initialValues,
+//   validationSchema,
+//   onSubmit,
+// }: UseFormProps<T>): UseFormReturn<T> {
+//   const [values, setValues] = useState<T>(initialValues);
+//   const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setValues((prevValues) => ({ ...prevValues, [name]: value }));
-  };
+//   const validate = async () => {
+//     if (!validationSchema) return true;
+//     try {
+//       await validationSchema.validate(values, { abortEarly: false });
+//       setErrors({});
+//       return true;
+//     } catch (validationErrors) {
+//       const errors: Partial<Record<keyof T, string>> = {};
+//       validationErrors.inner.forEach((error: any) => {
+//         errors[error.path as keyof T] = error.message;
+//       });
+//       setErrors(errors);
+//       return false;
+//     }
+//   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const validationErrors = validate(values);
-    setErrors(validationErrors);
-    if (Object.keys(validationErrors).length === 0) {
-      onSubmit(values);
-    }
-  };
+//   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     const { name, value } = event.target;
+//     setValues((prevValues) => ({
+//       ...prevValues,
+//       [name]: value,
+//     }));
+//   };
 
-  return { values, errors, handleChange, handleSubmit };
-}
+//   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+//     event.preventDefault();
+//     const isValid = await validate();
+//     if (isValid) {
+//       await onSubmit(values);
+//     }
+//   };
 
-export default useForm;
+//   const resetForm = () => {
+//     setValues(initialValues);
+//     setErrors({});
+//   };
+
+//   return {
+//     values,
+//     errors,
+//     handleChange,
+//     handleSubmit,
+//     resetForm,
+//   };
+// }
+
+// export default useForm;
