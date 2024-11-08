@@ -1,11 +1,11 @@
 import AppProvider from "./AppProvider";
 import LoginForm from "./components/LoginForm";
-// import SignUpForm from "./components/SignUpForm";
+import SignUpForm from "./components/SignUpForm";
 
 function App() {
   return (
     <AppProvider>
-      {/* <SignUpForm /> */}
+      <SignUpForm />
       <LoginForm />
     </AppProvider>
   );

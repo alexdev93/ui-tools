@@ -1,17 +1,30 @@
 /** @jsxImportSource @emotion/react */
 import { TextInput, PasswordInput, Button, Box } from "@mantine/core";
-import { useFormik } from "formik";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { signupValidation } from "../validators/auth";
 import { css } from "@emotion/react";
 
+interface SignUpValues {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
 const SignUpForm = () => {
-  const formik = useFormik({
-    initialValues: { email: "", password: "", confirmPassword: "" },
-    validationSchema: signupValidation, // Fix: Added validationSchema here
-    onSubmit: (values) => {
-      console.log("Form values:", values); // Replace with actual sign-up logic
-    },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<SignUpValues>({
+    resolver: yupResolver(signupValidation),
   });
+
+  const onSubmit = (values: SignUpValues) => {
+    console.log("Form values:", values); // Replace with actual sign-up logic
+    reset(); // Reset form after successful submission
+  };
 
   return (
     <Box
@@ -20,46 +33,28 @@ const SignUpForm = () => {
         margin: 0 auto;
       `}
     >
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <TextInput
           label="Email"
           placeholder="Enter your email"
-          name="email"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.email}
-          error={
-            formik.touched.email && formik.errors.email
-              ? formik.errors.email
-              : null
-          }
+          {...register("email")}
+          autoComplete="off"
+          error={errors.email?.message || null}
         />
         <PasswordInput
           label="Password"
           placeholder="Enter your password"
-          name="password"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.password}
-          error={
-            formik.touched.password && formik.errors.password
-              ? formik.errors.password
-              : null
-          }
+          {...register("password")}
+          autoComplete="off"
+          error={errors.password?.message || null}
           mt="md"
         />
         <PasswordInput
           label="Confirm Password"
           placeholder="Confirm your password"
-          name="confirmPassword"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.confirmPassword}
-          error={
-            formik.touched.confirmPassword && formik.errors.confirmPassword
-              ? formik.errors.confirmPassword
-              : null
-          }
+          {...register("confirmPassword")}
+          autoComplete="off"
+          error={errors.confirmPassword?.message || null}
           mt="md"
         />
         <Button fullWidth type="submit" mt="lg" color="blue">
