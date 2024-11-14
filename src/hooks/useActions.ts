@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // hooks/useActions.ts
 import { useDispatch } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as actions from "../saga/actions";
+import { loginUser, signupUser } from "../saga/actions";
+// import { bindActionCreators } from "redux";
+// import * as actions from "../saga/actions";
 
 const useActions = () => {
   const dispatch = useDispatch();
-
   return {
-    ...bindActionCreators(actions, dispatch),
-    // ...bindActionCreators(otherActions, dispatch),
+    signupUser: (data: any) => dispatch(signupUser(data)),
+    loginUser: (data: any) => dispatch(loginUser(data)),
   };
 };
 

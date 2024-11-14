@@ -4,14 +4,18 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signupValidation } from "../validators/auth";
 import { css } from "@emotion/react";
+import useActions from "../hooks/useActions";
 
 interface SignUpValues {
+  username: string; // Added username field
   email: string;
   password: string;
   confirmPassword: string;
 }
 
 const SignUpForm = () => {
+  const { signupUser } = useActions();
+
   const {
     register,
     handleSubmit,
@@ -21,9 +25,13 @@ const SignUpForm = () => {
     resolver: yupResolver(signupValidation),
   });
 
-  const onSubmit = (values: SignUpValues) => {
-    console.log("Form values:", values); // Replace with actual sign-up logic
-    reset(); // Reset form after successful submission
+  const onSubmit = async (data: SignUpValues) => {
+    try {
+      await signupUser(data);
+      reset();
+    } catch (error) {
+      console.error("SignUp failed:", error);
+    }
   };
 
   return (
@@ -34,6 +42,13 @@ const SignUpForm = () => {
       `}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
+        <TextInput
+          label="User name"
+          placeholder="Enter your user name"
+          {...register("username")}
+          autoComplete="off"
+          error={errors.username?.message || null}
+        />
         <TextInput
           label="Email"
           placeholder="Enter your email"
