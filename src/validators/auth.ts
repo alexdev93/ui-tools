@@ -8,6 +8,10 @@ export const loginValidation = Yup.object({
 });
 
 export const signupValidation = Yup.object({
+  username: Yup.string()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username can't be longer than 20 characters")
+    .required("Username is required"),
   email: Yup.string().email("Invalid email address").required("Required"),
   password: Yup.string()
     .min(3, "Password must be at least 3 characters")

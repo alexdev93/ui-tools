@@ -6,6 +6,7 @@ export interface LoginCredentials {
 
 // New interface for signup credentials
 export interface SignUpCredentials {
+  username: string;
   email: string;
   password: string;
   confirmPassword: string; // Include confirmPassword for the signup process
